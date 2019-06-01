@@ -18,12 +18,13 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ConfigUtils {
-    private double baseReward = 0.0;
-    private HashMap<String, VoteKey> voteKeys;
-    private HashMap<String, Bonus> bonuses;
+    public double baseReward = 0.0;
+    public HashMap<String, VoteKey> voteKeys;
+    public HashMap<String, Bonus> bonuses;
+    public List<String> consoleCommands;
+    public List<String> playerCommands;
 
-    public ConfigUtils() {
-    }
+    public ConfigUtils() { }
 
     public void init(FileConfiguration config) {
         baseReward = config.getDouble("base-reward", 200.0);
@@ -34,6 +35,14 @@ public class ConfigUtils {
 
         if (config.getBoolean("enable-bonus")) {
             bonuses = getBonuses(config);
+        }
+
+        if (config.getStringList("commands") != null) {
+            consoleCommands = config.getStringList("commands");
+        }
+
+        if (config.getStringList("sudo-commands") != null) {
+            playerCommands = config.getStringList("sudo-commands");
         }
     }
 
@@ -150,18 +159,6 @@ public class ConfigUtils {
 
         }
 
-        return bonuses;
-    }
-
-    public double getBaseReward() {
-        return baseReward;
-    }
-
-    public HashMap<String, VoteKey> getVoteKeys() {
-        return voteKeys;
-    }
-
-    public HashMap<String, Bonus> getBonuses() {
         return bonuses;
     }
 }

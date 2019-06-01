@@ -2,11 +2,14 @@ package top.ageofelysian.voterewards.Events;
 
 import com.vexsoftware.votifier.model.Vote;
 import com.vexsoftware.votifier.model.VotifierEvent;
+
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+
 import top.ageofelysian.voterewards.Objects.UserEntry;
 import top.ageofelysian.voterewards.Utilities.GeneralUtils;
 import top.ageofelysian.voterewards.VoteRewards;
@@ -16,7 +19,6 @@ public class VoteEvent implements Listener {
 
     @EventHandler
     public void onVote(VotifierEvent event) {
-        Bukkit.getLogger().info("debug");
         final Vote vote = event.getVote();
 
         if (vote.getUsername() == null) return;
@@ -46,14 +48,32 @@ public class VoteEvent implements Listener {
         if (entry == null) return;
 
         // 129.600.000‬ equals 1 day and a half
-        if (entry.getLastVoteTime() < (System.currentTimeMillis() - 129_600_000)) {
-            entry.setLastVoteTime(System.currentTimeMillis());
+        if (entry.getLastVoteTime().get(vote.getServiceName()) < (System.currentTimeMillis() - 129_600_000)) {
             entry.resetStreak();
         }
+
+        entry.setLastVoteTime(vote.getServiceName(), System.currentTimeMillis());
+
         entry.incrementStreak();
         entry.incrementTotal();
         entry.save();
 
         VoteRewards.getStorage().addUserData(entry);
+
+        final String name = p.getName();
+        final String address = vote.getServiceName();
+
+        VoteRewards.getStorage().getConsoleCommands().forEach(command -> {
+            if (command.charAt(0) == '/') {
+                command = command.replaceFirst("/", "");
+            }
+
+            command = command.replaceAll("%player%", name);
+            command = command.replaceAll("%site%", address);
+
+            ChatColor.translateAlternateColorCodes('&', command);
+
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+        });
     }
 }

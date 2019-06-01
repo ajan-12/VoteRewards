@@ -1,9 +1,11 @@
 package top.ageofelysian.voterewards.Utilities;
 
 import com.vexsoftware.votifier.model.Vote;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+
 import top.ageofelysian.voterewards.Objects.UserEntry;
 import top.ageofelysian.voterewards.VoteRewards;
 
@@ -36,6 +38,20 @@ public class GeneralUtils {
 
         VoteRewards.getStorage().getBonuses().values().forEach(bonus -> bonus.apply(p));
         VoteRewards.getStorage().getVoteKeys().values().forEach(voteKey -> voteKey.apply(p.getPlayer()));
+
+        VoteRewards.getStorage().getPlayerCommands().forEach(command -> {
+
+            if (command.charAt(0) == '/') {
+                command = command.replaceFirst("/", "");
+            }
+
+            command = command.replaceAll("%player%", p.getName());
+            command = command.replaceAll("%site%", address);
+
+            ChatColor.translateAlternateColorCodes('&', command);
+
+            Bukkit.dispatchCommand(p, command);
+        });
     }
 
     public void addOfflineVote(UUID uuid, Vote vote) {
@@ -46,7 +62,10 @@ public class GeneralUtils {
             final HashMap<String, Integer> offlineVotes = new HashMap<>();
             offlineVotes.put(service, 1);
 
-            entry = new UserEntry(uuid, 1, 1, (int) System.currentTimeMillis(), offlineVotes);
+            final HashMap<String, Long> lastVoteTimes = new HashMap<>();
+            lastVoteTimes.put(service, System.currentTimeMillis());
+
+            entry = new UserEntry(uuid, 1, 1, lastVoteTimes, offlineVotes);
             entry.save();
             VoteRewards.getStorage().addUserData(entry);
 

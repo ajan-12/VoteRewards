@@ -90,4 +90,24 @@ vote-keys:
     hide-enchantments: true
 
     #Rarity -3 means that players will get 0 to 2 keys. But more than 50% rarer than Rarity 0
-    rarity: -3
+    rarity: -4
+
+########################################################################################
+#### COMMANDS GUIDE:
+# commands: this is a list of commands that will be executed whenever a vote is made.
+# commands: these commands will be executed from console.
+# commands: these commands will execute even if the voting player is offline.
+#
+# sudo-commands: this is a list of commands that will be executed when a vote is made.
+# sudo-commands: these commands will be executed from the voting player.
+# sudo-commands: if the voting player is offline when they voted, these commands will execute when they login.
+#
+#### PLACEHOLDER GUIDE:
+# %player% : takes place of the name of the voting player.
+# %site% : takes place of the name of the website the player voted.
+
+commands:
+  - /say &4A Player has recently voted!
+
+sudo-commands:
+  - /msg %player% %player% has voted. No wait... that's me.
