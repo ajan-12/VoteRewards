@@ -1,0 +1,19 @@
+name: VoteRewards
+version: ${project.version}
+main: top.ageofelysian.voterewards.VoteRewards
+depend: [Vault, Votifier]
+
+authors: [ajan_12]
+description: A plugin that rewards players who vote.
+
+commands:
+  voterewards:
+    description: Main command of the plugin. Used for reloading.
+    usage: /voterewards <reload>
+    permission: voterewards.command
+    permission-message: "&4You do not have permission to do this!"
+
+permissions:
+  voterewards.command:
+    description: The permission node to use /voterewards.
+    default: op

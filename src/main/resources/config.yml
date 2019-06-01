@@ -1,0 +1,93 @@
+# The base reward that will always be rewarded to the player who voted.
+# This value is static.
+base-reward: 200
+
+########################################################################################
+#### BONUS GUIDE:
+# multiplier: needed, double value
+# minimum: needed, double value
+# maximum: needed, double value
+#
+# vote-limit: optional(can be used in all 3 bonuses), no values
+# - limit: needed(if vote-limit is used), integer value
+# - multiplier: needed(if vote-limit is used), double value
+# - max-limit: needed(if vote-limit is used), integer value
+#
+# random-number-generator: needed(can only be used in luck-bonus), no values
+# - max-value: needed(if the bonus is luck-bonus), integer value
+# - min-value: needed(if the bonus is luck-bonus), integer value
+
+enable-bonus: true
+
+bonuses:
+  vote-streak:
+    #Formula: (streak-amount * multiplier)
+    multiplier: 50.0
+    #If the bonus is lower than minimum then bonus will not be given to player.
+    minimum: 250.0
+    #If the bonus is higher than maximum then bonus will be set to maximum amount.
+    maximum: 1000.0
+
+  total-vote-count:
+    #Formula: (total-votes * multiplier)
+    multiplier: 50.0
+    #If the bonus is lower than minimum then bonus will not be given to player.
+    minimum: 250.0
+    #If the bonus is higher than maximum then bonus will be set to maximum amount.
+    maximum: 1000.0
+
+  luck-bonus:
+    #Formula: (random-number-generator * multiplier)
+    multiplier: 50.0
+    #If the bonus is lower than minimum then bonus will not be given to player.
+    minimum: 250.0
+    #If the bonus is higher than maximum then bonus will be set to maximum amount.
+    maximum: 1000.0
+
+    #This bonus will be applied to players with votes lower than or equal to vote-limit
+    vote-limit:
+      limit: 10
+      #Formula will be applied only if limit is exceeded.
+      #Formula: (normal-reward * multiplier)
+      multiplier: 0.5
+      #If max-limit is exceeded then player won't get the bonus at all.
+      max-limit: 50
+
+    random-number-generator:
+      max-value: 200
+      min-value: 100
+
+########################################################################################
+
+enable-vote-keys: true
+
+vote-keys:
+  vote-key:
+    Type: TRIPWIRE_HOOK
+    Display-name: "&bVote Key"
+
+    Lores:
+      - "&7Right-Click on a \"&6VoteCrate&7\" crate to win an item!"
+
+    Enchantments:
+      DURABILITY:
+        level: 1
+    hide-enchantments: true
+
+    #Rarity 0 means that players will get 0 to 5 keys.
+    rarity: 0
+
+  special-key:
+    Type: TRIPWIRE_HOOK
+    Display-name: "&6Special Golden Key"
+
+    Lores:
+      - "&7Right-Click on a \"&6SpecialCrate&7\" crate to win an item!"
+      -
+    Enchantments:
+      DURABILITY:
+        level: 1
+    hide-enchantments: true
+
+    #Rarity -3 means that players will get 0 to 2 keys. But more than 50% rarer than Rarity 0
+    rarity: -3
