@@ -22,7 +22,7 @@ public class VoteReminder implements Runnable {
 
             } else {
 
-                StringBuilder notification = new StringBuilder(VoteRewards.getStorage().getTag() + " &bYou can vote now on");
+                final StringBuilder notification = new StringBuilder(VoteRewards.getStorage().getTag() + " &bYou can vote now on");
 
                 final boolean[] boo = {false};
                 entry.getLastVoteTime().forEach((address, lastVoteTime) -> {
@@ -38,7 +38,7 @@ public class VoteReminder implements Runnable {
                 if (boo[0]) {
 
                     notification.append(".");
-                    utils.broadcast(notification.toString());
+                    p.sendMessage(notification.toString());
 
                 }
             }

@@ -22,15 +22,16 @@ public class PlayerDataHandle {
         FileConfiguration data = YamlConfiguration.loadConfiguration(dataFile);
 
         for (String key : data.getKeys(false)) {
+            try {
+                HashMap<String, Integer> offlineVotes = new HashMap<>();
+                data.getConfigurationSection("offlineVotes").getKeys(false).forEach(address -> offlineVotes.put(address, data.getInt("offlineVotes." + address)));
 
-            HashMap<String, Integer> offlineVotes = new HashMap<>();
-            data.getConfigurationSection("offlineVotes").getKeys(false).forEach(address -> offlineVotes.put(address, data.getInt("offlineVotes." + address)));
+                HashMap<String, Long> lastVoteTimes = new HashMap<>();
+                data.getConfigurationSection("lastVoteTimes").getKeys(false).forEach(address -> lastVoteTimes.put(address, data.getLong("lastVoteTimes." + address)));
 
-            HashMap<String, Long> lastVoteTimes = new HashMap<>();
-            data.getConfigurationSection("lastVoteTimes").getKeys(false).forEach(address -> lastVoteTimes.put(address, data.getLong("lastVoteTimes." + address)));
-
-            UserEntry entry = new UserEntry(UUID.fromString(key), data.getInt(key + ".streak", 0), data.getInt(key + ".total", 0), lastVoteTimes, offlineVotes);
-            userData.add(entry);
+                UserEntry entry = new UserEntry(UUID.fromString(key), data.getInt(key + ".streak", 0), data.getInt(key + ".total", 0), lastVoteTimes, offlineVotes);
+                userData.add(entry);
+            } catch (NullPointerException ignored) {}
         }
 
         return userData;

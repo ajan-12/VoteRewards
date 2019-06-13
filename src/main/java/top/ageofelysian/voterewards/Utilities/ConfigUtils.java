@@ -66,12 +66,17 @@ public class ConfigUtils {
             meta.setDisplayName(displayName);
 
             List<String> lores = config.getStringList("vote-keys." + key + ".Lores");
-            lores.forEach(lore -> ChatColor.translateAlternateColorCodes('&', lore));
+            for (int i = 0; i < lores.size(); i++) {
+                lores.set(i, ChatColor.translateAlternateColorCodes('&', lores.get(i)));
+            }
             meta.setLore(lores);
 
             for (String enchant : config.getConfigurationSection("vote-keys." + key + ".Enchantments").getKeys(false)) {
-                Enchantment enchantment = Enchantment.getByName(enchant);
-                stack.addUnsafeEnchantment(enchantment, config.getInt("vote-keys." + key + ".Enchantments." + enchant + ".level"));
+                for (Enchantment enchantment : Enchantment.values()) {
+                    if (enchantment.getName().equals(enchant)) {
+                        meta.addEnchant(enchantment, config.getInt("vote-keys." + key + ".Enchantments." + enchant + ".level"), true);
+                    }
+                }
             }
 
             boolean hideEnchs = config.getBoolean("vote-keys." + key + ".hide-enchantments", false);
