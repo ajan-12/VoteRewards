@@ -11,14 +11,14 @@ public class VoteReminder implements Runnable {
 
     @Override
     public void run() {
-        GeneralUtils utils = new GeneralUtils();
+        final GeneralUtils utils = new GeneralUtils();
 
-        for (Player p : Bukkit.getOnlinePlayers()) {
+        for (final Player p : Bukkit.getOnlinePlayers()) {
 
-            UserEntry entry = VoteRewards.getStorage().getUserData(p.getUniqueId());
+            final UserEntry entry = VoteRewards.getStorage().getUserData(p.getUniqueId());
             if (entry == null) {
 
-                utils.broadcast(VoteRewards.getStorage().getTag() + " &bYou can vote now on every website supported!");
+                p.sendMessage(VoteRewards.getStorage().getTag() + " &bYou can vote now on every website supported!");
 
             } else {
 
