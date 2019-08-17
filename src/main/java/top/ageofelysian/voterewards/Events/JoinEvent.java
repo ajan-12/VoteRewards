@@ -1,14 +1,13 @@
 package top.ageofelysian.voterewards.Events;
 
-import org.bukkit.Bukkit;
+import java.util.UUID;
+
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-
 import org.bukkit.event.player.PlayerJoinEvent;
+
 import top.ageofelysian.voterewards.Objects.UserEntry;
 import top.ageofelysian.voterewards.Utilities.GeneralUtils;
-
-import java.util.UUID;
 
 public class JoinEvent implements Listener {
     private final GeneralUtils utils = new GeneralUtils();

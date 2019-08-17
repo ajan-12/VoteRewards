@@ -1,15 +1,15 @@
 package top.ageofelysian.voterewards.Objects;
 
-import com.vexsoftware.votifier.model.Vote;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import top.ageofelysian.voterewards.VoteRewards;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.UUID;
+
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+
+import top.ageofelysian.voterewards.VoteRewards;
 
 public class UserEntry {
 
