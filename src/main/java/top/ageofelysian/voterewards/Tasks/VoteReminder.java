@@ -3,15 +3,13 @@ package top.ageofelysian.voterewards.Tasks;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import top.ageofelysian.voterewards.Objects.UserEntry;
-import top.ageofelysian.voterewards.Utilities.GeneralUtils;
 import top.ageofelysian.voterewards.VoteRewards;
+import top.ageofelysian.voterewards.Objects.UserEntry;
 
 public class VoteReminder implements Runnable {
 
     @Override
     public void run() {
-        final GeneralUtils utils = new GeneralUtils();
 
         for (final Player p : Bukkit.getOnlinePlayers()) {
 

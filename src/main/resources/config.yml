@@ -69,7 +69,7 @@ vote-keys:
       - "&7Right-Click on a \"&6VoteCrate&7\" crate to win an item!"
 
     Enchantments:
-      DURABILITY:
+      unbreaking:
         level: 1
     hide-enchantments: true
 
@@ -84,7 +84,7 @@ vote-keys:
       - "&7Right-Click on a \"&6SpecialCrate&7\" crate to win an item!"
       -
     Enchantments:
-      DURABILITY:
+      unbreaking:
         level: 1
     hide-enchantments: true
 

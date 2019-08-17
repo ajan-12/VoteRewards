@@ -2,6 +2,7 @@ package top.ageofelysian.voterewards.Utilities;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
@@ -72,11 +73,9 @@ public class ConfigUtils {
             meta.setLore(lores);
 
             for (String enchant : config.getConfigurationSection("vote-keys." + key + ".Enchantments").getKeys(false)) {
-                for (Enchantment enchantment : Enchantment.values()) {
-                    if (enchantment.getName().equals(enchant)) {
-                        meta.addEnchant(enchantment, config.getInt("vote-keys." + key + ".Enchantments." + enchant + ".level"), true);
-                    }
-                }
+				if(Enchantment.getByKey(NamespacedKey.minecraft(enchant)) != null) {
+					meta.addEnchant(Enchantment.getByKey(NamespacedKey.minecraft(enchant)), config.getInt("vote-keys." + key + ".Enchantments." + enchant + ".level"), true);
+				}
             }
 
             boolean hideEnchs = config.getBoolean("vote-keys." + key + ".hide-enchantments", false);
