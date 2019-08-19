@@ -24,7 +24,11 @@ public class JoinEvent implements Listener {
             for (int i = 1; i <= amount; i++) {
                 utils.processVote(event.getPlayer(), address);
             }
-            entry.removeOfflineVote(address);
         });
+        
+        //Clears all offline votes after they are processed
+        entry.getOfflineVotes().clear();
+        
+        entry.save();
     }
 }
