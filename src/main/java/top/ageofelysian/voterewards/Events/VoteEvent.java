@@ -1,18 +1,20 @@
 package top.ageofelysian.voterewards.Events;
 
-import com.vexsoftware.votifier.model.Vote;
-import com.vexsoftware.votifier.model.VotifierEvent;
+import java.util.HashMap;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
+import com.vexsoftware.votifier.model.Vote;
+import com.vexsoftware.votifier.model.VotifierEvent;
+
+import top.ageofelysian.voterewards.VoteRewards;
 import top.ageofelysian.voterewards.Objects.UserEntry;
 import top.ageofelysian.voterewards.Utilities.GeneralUtils;
-import top.ageofelysian.voterewards.VoteRewards;
 
 public class VoteEvent implements Listener {
     private final GeneralUtils utils = new GeneralUtils();
@@ -22,19 +24,19 @@ public class VoteEvent implements Listener {
         final Vote vote = event.getVote();
 
         if (vote.getUsername() == null) return;
-
-        Player p = null;
-        try {
-
-            p = Bukkit.getPlayerExact(vote.getUsername());
-            utils.processVote(p, vote.getServiceName());
-
-        } catch (NullPointerException ignored) {
-
-            for (OfflinePlayer offlinePlayer : Bukkit.getOfflinePlayers()) {
+        
+        UUID playerUUID = null;
+        if (Bukkit.getPlayerExact(vote.getUsername()) != null) {
+        	
+        	playerUUID = Bukkit.getPlayerExact(vote.getUsername()).getUniqueId();
+        	utils.processVote(Bukkit.getPlayerExact(vote.getUsername()), vote.getServiceName());
+        	
+        } else {
+        	for (OfflinePlayer offlinePlayer : Bukkit.getOfflinePlayers()) {
 
                 if (offlinePlayer.getName().equals(vote.getUsername())) {
-
+                	
+                	playerUUID = offlinePlayer.getUniqueId();
                     utils.addOfflineVote(offlinePlayer.getUniqueId(), vote);
                     break;
 
@@ -42,25 +44,31 @@ public class VoteEvent implements Listener {
 
             }
         }
-        if (p == null) return;
+        
+        if (playerUUID == null) return; //If playerUUID is null, that player does not exist
+        
+        UserEntry entry = utils.getEntry(playerUUID);
+        if (entry != null) {
+        	
+        	// 129.600.000‬ equals 1 day and a half
+            if (entry.getLastVoteTime().get(vote.getServiceName()) < (System.currentTimeMillis() - 129_600_000)) {
+                entry.resetStreak();
+            }
 
-        final UserEntry entry = utils.getEntry(p.getUniqueId());
-        if (entry == null) return;
-
-        // 129.600.000‬ equals 1 day and a half
-        if (entry.getLastVoteTime().get(vote.getServiceName()) < (System.currentTimeMillis() - 129_600_000)) {
-            entry.resetStreak();
+            entry.incrementStreak();
+            entry.incrementTotal();
+            
+        } else {
+        	
+        	entry = new UserEntry(playerUUID, 1, 1, new HashMap<>(), new HashMap<>());
+        	
         }
-
+        
         entry.setLastVoteTime(vote.getServiceName(), System.currentTimeMillis());
-
-        entry.incrementStreak();
-        entry.incrementTotal();
         entry.save();
-
         VoteRewards.getStorage().addUserData(entry);
-
-        final String name = p.getName();
+        
+        final String name = vote.getUsername();
         final String address = vote.getServiceName();
 
         VoteRewards.getStorage().getConsoleCommands().forEach(command -> {
