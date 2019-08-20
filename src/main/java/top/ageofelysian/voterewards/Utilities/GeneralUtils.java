@@ -62,11 +62,8 @@ public class GeneralUtils {
             final HashMap<String, Integer> offlineVotes = new HashMap<>();
             offlineVotes.put(service, 1);
 
-            final HashMap<String, Long> lastVoteTimes = new HashMap<>();
-            lastVoteTimes.put(service, System.currentTimeMillis());
-
-            entry = new UserEntry(uuid, 1, 1, lastVoteTimes, offlineVotes);
-            entry.save();
+            entry = new UserEntry(uuid, 0, 0, new HashMap<>(), offlineVotes);
+            entry.save(true);
             VoteRewards.getStorage().addUserData(entry);
 
         } else {
@@ -82,7 +79,7 @@ public class GeneralUtils {
             }
 
             entry.updateOfflineVotes(offlineVotes);
-            entry.save();
+            entry.save(true);
             VoteRewards.getStorage().addUserData(entry);
 
         }

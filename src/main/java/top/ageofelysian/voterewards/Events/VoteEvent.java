@@ -48,24 +48,18 @@ public class VoteEvent implements Listener {
         if (playerUUID == null) return; //If playerUUID is null, that player does not exist
         
         UserEntry entry = utils.getEntry(playerUUID);
-        if (entry != null) {
+        if (entry == null) entry = new UserEntry(playerUUID, 0, 0, new HashMap<>(), new HashMap<>());
         	
-        	// 129.600.000‬ equals 1 day and a half
-            if (entry.getLastVoteTime().get(vote.getServiceName()) < (System.currentTimeMillis() - 129_600_000)) {
-                entry.resetStreak();
-            }
-
-            entry.incrementStreak();
-            entry.incrementTotal();
-            
-        } else {
-        	
-        	entry = new UserEntry(playerUUID, 1, 1, new HashMap<>(), new HashMap<>());
-        	
+        // 129.600.000‬ equals 1 day and a half
+        if (entry.getLastVoteTime().containsKey(vote.getServiceName()) && (entry.getLastVoteTime().get(vote.getServiceName()) < (System.currentTimeMillis() - 129_600_000))) {
+            entry.resetStreak();
         }
+
+        entry.incrementStreak();
+        entry.incrementTotal();
         
         entry.setLastVoteTime(vote.getServiceName(), System.currentTimeMillis());
-        entry.save();
+        entry.save(true);
         VoteRewards.getStorage().addUserData(entry);
         
         final String name = vote.getUsername();

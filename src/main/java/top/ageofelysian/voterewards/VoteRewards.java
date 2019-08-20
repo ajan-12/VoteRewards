@@ -1,26 +1,34 @@
 package top.ageofelysian.voterewards;
 
-import net.milkbowl.vault.economy.Economy;
-
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.plugin.java.JavaPlugin;
-
-import top.ageofelysian.voterewards.Commands.MainCommand;
-import top.ageofelysian.voterewards.Events.*;
-import top.ageofelysian.voterewards.Objects.*;
-import top.ageofelysian.voterewards.Tasks.VoteReminder;
-import top.ageofelysian.voterewards.Utilities.*;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.RegisteredServiceProvider;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import net.milkbowl.vault.economy.Economy;
+import top.ageofelysian.voterewards.Commands.MainCommand;
+import top.ageofelysian.voterewards.Events.JoinEvent;
+import top.ageofelysian.voterewards.Events.VoteEvent;
+import top.ageofelysian.voterewards.Objects.Bonus;
+import top.ageofelysian.voterewards.Objects.UserEntry;
+import top.ageofelysian.voterewards.Objects.VoteKey;
+import top.ageofelysian.voterewards.Tasks.VoteReminder;
+import top.ageofelysian.voterewards.Utilities.ConfigUtils;
+import top.ageofelysian.voterewards.Utilities.DataStorage;
+import top.ageofelysian.voterewards.Utilities.PlayerDataHandle;
+
 public class VoteRewards extends JavaPlugin {
     private static VoteRewards instance = null;
     private static DataStorage storage = null;
+    private File playerDataFile = null;
+    private FileConfiguration playerDataConfig = null;
     private Economy econ = null;
 
     @Override
@@ -64,18 +72,17 @@ public class VoteRewards extends JavaPlugin {
         ///////////////////////////////!!!  DATA FILE CHECKS  !!!/////////////////////////////////
 
         saveDefaultConfig();
-        File playerDataFile = new File(getDataFolder().getAbsolutePath() + File.separator + "PlayerData.yml");
-        File dataFile = new File(getDataFolder().getAbsolutePath() + File.separator + "Data.yml");
+        playerDataFile = new File(getDataFolder().getAbsolutePath() + File.separator + "PlayerData.yml");
 
         try {
 
             if (!playerDataFile.exists()) playerDataFile.createNewFile();
-            if (!dataFile.exists()) dataFile.createNewFile();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        
+        playerDataConfig = YamlConfiguration.loadConfiguration(playerDataFile);
 
         ///////////////////////////////!!!  OTHER STUFF  !!!/////////////////////////////////
 
@@ -95,11 +102,12 @@ public class VoteRewards extends JavaPlugin {
     @Override
     public void onDisable() {
 
-        PlayerDataHandle handler = new PlayerDataHandle();
-        handler.saveUserData(new File(getDataFolder().getAbsolutePath() + File.separator + "PlayerData.yml"));
+        PlayerDataHandle.saveUserData();
 
         storage = null;
         instance = null;
+        playerDataFile = null;
+        playerDataConfig = null;
     }
 
     public void initDataStorage() {
@@ -108,8 +116,6 @@ public class VoteRewards extends JavaPlugin {
         final ConfigUtils utils = new ConfigUtils();
         utils.init(getConfig());
 
-        final PlayerDataHandle getter = new PlayerDataHandle();
-
         final double baseReward = utils.baseReward;
         final HashMap<String, VoteKey> voteKeys = utils.voteKeys;
         final HashMap<String, Bonus> bonuses = utils.bonuses;
@@ -117,7 +123,7 @@ public class VoteRewards extends JavaPlugin {
         final List<String> consoleCommands = utils.consoleCommands;
         final List<String> playerCommands = utils.playerCommands;
 
-        final HashSet<UserEntry> userData = getter.getUserData(new File(getDataFolder().getAbsolutePath() + File.separator + "PlayerData.yml"));
+        final HashSet<UserEntry> userData = PlayerDataHandle.getUserData();
 
         storage = new DataStorage(baseReward, voteKeys, bonuses, userData, consoleCommands, playerCommands);
     }
@@ -132,5 +138,13 @@ public class VoteRewards extends JavaPlugin {
 
     public Economy getEcon() {
         return econ;
+    }
+    
+    public File getPlayerDataFile() {
+    	return playerDataFile;
+    }
+    
+    public FileConfiguration getPlayerDataConfig() {
+    	return playerDataConfig;
     }
 }

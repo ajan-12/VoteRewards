@@ -29,6 +29,6 @@ public class JoinEvent implements Listener {
         //Clears all offline votes after they are processed
         entry.getOfflineVotes().clear();
         
-        entry.save();
+        entry.save(true);
     }
 }
