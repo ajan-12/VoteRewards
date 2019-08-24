@@ -22,7 +22,7 @@ public class LuckBonus extends Bonus {
     public void apply(OfflinePlayer p) {
         GeneralUtils utils = new GeneralUtils();
 
-        UserEntry entry = utils.getEntry(p.getUniqueId());
+        UserEntry entry = VoteRewards.getStorage().getUserData(p.getUniqueId());
         if (entry == null) return;
 
         ThreadLocalRandom random = ThreadLocalRandom.current();

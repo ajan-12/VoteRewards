@@ -1,15 +1,15 @@
 package top.ageofelysian.voterewards.Objects;
 
-import java.io.File;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 
 import top.ageofelysian.voterewards.VoteRewards;
+import top.ageofelysian.voterewards.Utilities.PlayerDataHandle;
 
 public class UserEntry {
 
@@ -56,9 +56,8 @@ public class UserEntry {
     public void removeOfflineVote(String address) { offlineVotes.remove(address); }
     public void updateOfflineVotes(HashMap<String, Integer> offlineVotes) { this.offlineVotes = offlineVotes; }
 
-    public void save() {
-        File file = new File(VoteRewards.getInstance().getDataFolder().getAbsolutePath() + File.separator + "PlayerData.yml");
-        FileConfiguration fileCfg = YamlConfiguration.loadConfiguration(file);
+    public void save(boolean saveToFile) {
+        FileConfiguration fileCfg = VoteRewards.getInstance().getPlayerDataConfig();
 
         if (!fileCfg.contains(uuid.toString())) fileCfg.createSection(uuid.toString());
 
@@ -66,17 +65,17 @@ public class UserEntry {
 
         data.set("streak", streak);
         data.set("total", total);
+        
+        
+        List<String> lastVoteTimesList = new ArrayList<String>();
+        lastVoteTimes.forEach((address, lastVoteTime) -> lastVoteTimesList.add(address + ":" + lastVoteTime));
+        data.set("lastVoteTimes", lastVoteTimesList);
 
-        data.set("lastVoteTimes", null);
-        data.set("lastVoteTimes", lastVoteTimes);
+        List<String> offlineVotesList = new ArrayList<String>();
+        offlineVotes.forEach((address, offlineVotesAmount) -> offlineVotesList.add(address + ":" + offlineVotesAmount));
+        data.set("offlineVotes", offlineVotesList);
 
-        data.set("offlineVotes", null);
-        data.createSection("offlineVotes", offlineVotes);
-
-        try {
-            fileCfg.save(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        if(saveToFile) PlayerDataHandle.saveDataToFile();
+        
     }
 }

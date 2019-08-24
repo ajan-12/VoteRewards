@@ -1,6 +1,7 @@
 package top.ageofelysian.voterewards.Tasks;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import top.ageofelysian.voterewards.VoteRewards;
@@ -16,11 +17,11 @@ public class VoteReminder implements Runnable {
             final UserEntry entry = VoteRewards.getStorage().getUserData(p.getUniqueId());
             if (entry == null) {
 
-                p.sendMessage(VoteRewards.getStorage().getTag() + " &bYou can vote now on every website supported!");
+                p.sendMessage(VoteRewards.getStorage().getTag() + ChatColor.AQUA + " You can vote now on every website supported!");
 
             } else {
 
-                final StringBuilder notification = new StringBuilder(VoteRewards.getStorage().getTag() + " &bYou can vote now on");
+                final StringBuilder notification = new StringBuilder(VoteRewards.getStorage().getTag() + ChatColor.AQUA + " You can vote now on");
 
                 final boolean[] boo = {false};
                 entry.getLastVoteTime().forEach((address, lastVoteTime) -> {
