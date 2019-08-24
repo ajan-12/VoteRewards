@@ -8,8 +8,8 @@ description: A plugin that rewards players who vote.
 
 commands:
   voterewards:
-    description: Main command of the plugin. Used for reloading.
-    usage: /voterewards <reload>
+    description: Main command of the plugin. 
+    usage: /voterewards <reload> or /voterewards stats <playerName>
     permission: voterewards.command
     permission-message: "&4You do not have permission to do this!"
 

@@ -47,7 +47,7 @@ public class VoteEvent implements Listener {
         
         if (playerUUID == null) return; //If playerUUID is null, that player does not exist
         
-        UserEntry entry = utils.getEntry(playerUUID);
+        UserEntry entry = VoteRewards.getStorage().getUserData(playerUUID);
         if (entry == null) entry = new UserEntry(playerUUID, 0, 0, new HashMap<>(), new HashMap<>());
         	
         // 129.600.000‬ equals 1 day and a half

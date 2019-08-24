@@ -81,8 +81,6 @@ public class VoteRewards extends JavaPlugin {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
-        playerDataConfig = YamlConfiguration.loadConfiguration(playerDataFile);
 
         ///////////////////////////////!!!  OTHER STUFF  !!!/////////////////////////////////
 
@@ -115,6 +113,8 @@ public class VoteRewards extends JavaPlugin {
 
         final ConfigUtils utils = new ConfigUtils();
         utils.init(getConfig());
+        
+        playerDataConfig = YamlConfiguration.loadConfiguration(playerDataFile);
 
         final double baseReward = utils.baseReward;
         final HashMap<String, VoteKey> voteKeys = utils.voteKeys;

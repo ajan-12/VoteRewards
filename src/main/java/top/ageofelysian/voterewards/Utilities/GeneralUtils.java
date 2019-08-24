@@ -18,17 +18,6 @@ public class GeneralUtils {
         Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', message));
     }
 
-    public UserEntry getEntry(UUID uuid) {
-        UserEntry entry = null;
-        for (UserEntry entry1 : VoteRewards.getStorage().getUserData()) {
-            if (entry1.getUuid().equals(uuid)) {
-                entry = entry1;
-                break;
-            }
-        }
-        return entry;
-    }
-
     public void processVote(Player p, String address) {
         broadcast("&a" + p.getName() + " &6voted at &a" + address + " &6and got");
 
@@ -55,7 +44,7 @@ public class GeneralUtils {
     }
 
     public void addOfflineVote(UUID uuid, Vote vote) {
-        UserEntry entry = getEntry(uuid);
+        UserEntry entry = VoteRewards.getStorage().getUserData(uuid);
         String service = vote.getServiceName();
 
         if (entry == null) {

@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+import top.ageofelysian.voterewards.VoteRewards;
 import top.ageofelysian.voterewards.Objects.UserEntry;
 import top.ageofelysian.voterewards.Utilities.GeneralUtils;
 
@@ -15,7 +16,7 @@ public class JoinEvent implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         final UUID uuid = event.getPlayer().getUniqueId();
-        final UserEntry entry = utils.getEntry(uuid);
+        final UserEntry entry = VoteRewards.getStorage().getUserData(uuid);
 
         if (entry == null) return;
         if (entry.getOfflineVotes() == null || entry.getOfflineVotes().keySet().size() == 0) return;
