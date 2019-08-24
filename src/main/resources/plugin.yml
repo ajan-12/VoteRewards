@@ -3,7 +3,7 @@ version: ${project.version}
 main: top.ageofelysian.voterewards.VoteRewards
 depend: [Vault, Votifier]
 
-authors: [ajan_12]
+authors: [ajan_12, AlexLander123]
 description: A plugin that rewards players who vote.
 
 commands:
