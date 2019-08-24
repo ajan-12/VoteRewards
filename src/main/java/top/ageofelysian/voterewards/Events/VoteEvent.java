@@ -73,9 +73,7 @@ public class VoteEvent implements Listener {
             command = command.replaceAll("%player%", name);
             command = command.replaceAll("%site%", address);
 
-            ChatColor.translateAlternateColorCodes('&', command);
-
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), ChatColor.translateAlternateColorCodes('&', command));
         });
     }
 }
