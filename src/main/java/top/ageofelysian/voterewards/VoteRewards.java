@@ -87,7 +87,9 @@ public class VoteRewards extends JavaPlugin {
         initDataStorage();
 
         //Registering Commands
-        getCommand("voterewards").setExecutor(new MainCommand());
+        MainCommand mainCommandManager = new MainCommand();
+        getCommand("voterewards").setExecutor(mainCommandManager);
+        getCommand("voterewards").setTabCompleter(mainCommandManager);
 
         //Registering Events
         getServer().getPluginManager().registerEvents(new VoteEvent(), this);

@@ -4,25 +4,27 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 
 import top.ageofelysian.voterewards.VoteRewards;
 import top.ageofelysian.voterewards.Objects.UserEntry;
 
-public class MainCommand implements CommandExecutor {
+public class MainCommand implements TabExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
     	if(args.length > 0) {
-    		if (args[0].equals("reload")) {
+    		if (args[0].equalsIgnoreCase("reload")) {
                 VoteRewards.getInstance().initDataStorage();
 
                 if (sender instanceof Player) {
@@ -32,10 +34,10 @@ public class MainCommand implements CommandExecutor {
                     sender.sendMessage("Successfully reloaded the plugin.");
                 }
                 return true;
-            } else if (args[0].equals("stats")) {
+            } else if (args[0].equalsIgnoreCase("stats")) {
             	
             	if (args.length != 2) {
-            		sender.sendMessage(VoteRewards.getStorage().getTag() + "Correct Usage: /voterewards stats <playerName>");
+            		sender.sendMessage(VoteRewards.getStorage().getTag() + " Correct Usage: /voterewards stats <playerName>");
             		return true;
             	}
             	
@@ -88,4 +90,22 @@ public class MainCommand implements CommandExecutor {
             } else return false;
     	} else return false;
     }
+
+	@Override
+	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+		List<String> suggestionList = new ArrayList<String>();
+		
+		if (args.length == 1) {
+			suggestionList.add("stats");
+			suggestionList.add("reload");
+		}
+		
+		if (args[0].equalsIgnoreCase("stats") && args.length == 2) {
+			Bukkit.getOnlinePlayers().forEach(player -> suggestionList.add(player.getName()));
+		}
+		
+		suggestionList.removeIf(suggestion -> !suggestion.regionMatches(true, 0, args[args.length-1], 0, args[args.length-1].length()));
+		
+		return suggestionList;
+	}
 }
