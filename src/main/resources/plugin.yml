@@ -1,5 +1,6 @@
 name: VoteRewards
 version: ${project.version}
+api-version: 1.13
 main: top.ageofelysian.voterewards.VoteRewards
 depend: [Vault, Votifier]
 
